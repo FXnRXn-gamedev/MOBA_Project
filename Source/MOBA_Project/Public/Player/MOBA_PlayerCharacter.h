@@ -44,39 +44,39 @@ private:
 	
 #pragma region Settings
 	
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Settings")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Settings")
 		float WalkSpeed = 450.0f;
 	
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Settings")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Settings")
 		float TurnRate = 540.0f;
 
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Settings")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Settings")
 		float JumpForce = 720.0f;
 
 #pragma endregion
 	
 #pragma region Camera component
 
-		UPROPERTY(VisibleDefaultsOnly, Category = "---Moba---|Camera")
+		UPROPERTY(VisibleDefaultsOnly, Category = "Moba|Camera")
 		USpringArmComponent* SpringArm;
 
-		UPROPERTY(VisibleDefaultsOnly, Category = "---Moba---|Camera")
+		UPROPERTY(VisibleDefaultsOnly, Category = "Moba|Camera")
 		UCameraComponent* FollowCamera;
 
 #pragma endregion
 
 #pragma region Input
 	
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Input")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input")
 		UInputMappingContext* MobaInputMappingContext;
 
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Input|Actions")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input|Actions")
 		UInputAction* JumpAction;
 
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Input|Actions")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input|Actions")
 		UInputAction* LookInputAction;
 
-		UPROPERTY(EditDefaultsOnly, Category = "---Moba---|Input|Actions")
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input|Actions")
 		UInputAction* MoveInputAction;
 
 #pragma endregion

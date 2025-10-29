@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "MOBA_PlayerController.generated.h"
 
+class AMOBA_PlayerCharacter;
+
+
 
 
 UCLASS()
@@ -14,14 +17,17 @@ class MOBA_PROJECT_API AMOBA_PlayerController : public APlayerController
 	GENERATED_BODY()
 
 	//------------------------------------------------------------------------------------------------------------------
-	
 public:
+	// Only Called on the server
+	virtual void OnPossess(APawn* InPawn) override;
+	// Only Called on the client, also on the listening server
+	virtual void AcknowledgePossession(APawn* P) override;
 
 	//------------------------------------------------------------------------------------------------------------------
-
 protected:
 
 	//------------------------------------------------------------------------------------------------------------------
-
 private:
+	UPROPERTY()
+	AMOBA_PlayerCharacter* PlayerCharacter;
 };

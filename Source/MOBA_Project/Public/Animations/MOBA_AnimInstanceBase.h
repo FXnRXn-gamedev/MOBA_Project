@@ -55,8 +55,8 @@ public:
 	
 	//------------------------------------------------------------------------------------------------------------------
 protected:
-		UPROPERTY(EditAnywhere, Category = "---Moba---|Anim")
-		float YawSpeedSmoothLerpSpeed = 1.0f;
+		UPROPERTY(EditAnywhere, Category = "Moba|Anim")
+		float YawSpeedSmoothLerpSpeed = 4.0f;
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
