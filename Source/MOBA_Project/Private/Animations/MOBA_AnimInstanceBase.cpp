@@ -34,6 +34,9 @@ void UMOBA_AnimInstanceBase::NativeUpdateAnimation(float DeltaSeconds)
 	YawSpeed = BodyRotDelta.Yaw / DeltaSeconds;
 	SmoothedYawSpeed = UKismetMathLibrary::FInterpTo(SmoothedYawSpeed, YawSpeed, DeltaSeconds, YawSpeedSmoothLerpSpeed);
 
+	FRotator LookRot = OwnerCharacter->GetBaseAimRotation();
+	LookRotOffset = UKismetMathLibrary::NormalizedDeltaRotator(LookRot, BodyRot);
+
 	if (CharacterMovementComp)
 	{
 		bIsJumping = CharacterMovementComp->IsFalling();

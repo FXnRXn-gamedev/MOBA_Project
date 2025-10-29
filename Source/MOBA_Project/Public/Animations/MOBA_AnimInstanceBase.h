@@ -44,13 +44,19 @@ public:
 		UFUNCTION(BlueprintCallable, Category = "---Moba---|Anim", meta=(BlueprintThreadSafe)) //
 		FORCEINLINE bool GetIsOnGround() const { return !bIsJumping; }
 
+		UFUNCTION(BlueprintCallable, Category = "---Moba---|Anim", meta=(BlueprintThreadSafe)) //
+		FORCEINLINE float GetLookYawOffset() const { return LookRotOffset.Yaw; }
+
+		UFUNCTION(BlueprintCallable, Category = "---Moba---|Anim", meta=(BlueprintThreadSafe)) //
+		FORCEINLINE float GetLookPitchOffset() const { return LookRotOffset.Pitch; }
+
 #pragma endregion
 
 	
 	//------------------------------------------------------------------------------------------------------------------
 protected:
-	UPROPERTY(EditAnywhere, Category = "---Moba---|Anim")
-	float YawSpeedSmoothLerpSpeed = 1.0f;
+		UPROPERTY(EditAnywhere, Category = "---Moba---|Anim")
+		float YawSpeedSmoothLerpSpeed = 1.0f;
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
@@ -64,6 +70,7 @@ private:
 		float YawSpeed;
 		float SmoothedYawSpeed;
 		FRotator BodyPrevRot;
+		FRotator LookRotOffset;
 	
 		bool bIsJumping;
 
