@@ -16,6 +16,8 @@ public class MOBA_Project : ModuleRules
 			"InputCore", 
 			"EnhancedInput",
 			"UMG",
+			"Slate",
+			"SlateCore",
 			"GameplayTasks",
 			"GameplayAbilities",
 			"GameplayTags"

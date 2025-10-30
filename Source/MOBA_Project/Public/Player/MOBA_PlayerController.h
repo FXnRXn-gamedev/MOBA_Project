@@ -7,7 +7,7 @@
 #include "MOBA_PlayerController.generated.h"
 
 class AMOBA_PlayerCharacter;
-
+class UMOBA_GameplayWidget;
 
 
 
@@ -28,6 +28,17 @@ protected:
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	void SpawnGameplayWidget();
+
+
+	// Player Refference
 	UPROPERTY()
 	AMOBA_PlayerCharacter* PlayerCharacter;
+
+	// Widget
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Widgets")
+	TSubclassOf<UUserWidget> GameplayWidgetClass;
+
+	UPROPERTY()
+	UMOBA_GameplayWidget* GameplayWidgetInstance;
 };

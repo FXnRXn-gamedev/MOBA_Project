@@ -52,10 +52,10 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
 
 
-	ATTRIBUTE_ACCESSORS(ThisClass, Health);
-	ATTRIBUTE_ACCESSORS(ThisClass, MaxHealth);
-	ATTRIBUTE_ACCESSORS(ThisClass, Mana);
-	ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Mana);
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxMana);
 	
 
 #pragma endregion

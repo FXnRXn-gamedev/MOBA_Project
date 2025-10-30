@@ -24,20 +24,20 @@ void UMOBA_AttributeSet::GetLifetimeReplicatedProps(TArray<class FLifetimeProper
 
 void UMOBA_AttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Health, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMOBA_AttributeSet, Health, OldValue);
 }
 
 void UMOBA_AttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MaxHealth, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMOBA_AttributeSet, MaxHealth, OldValue);
 }
 
 void UMOBA_AttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, Mana, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMOBA_AttributeSet, Mana, OldValue);
 }
 
 void UMOBA_AttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(ThisClass, MaxMana, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMOBA_AttributeSet, MaxMana, OldValue);
 }

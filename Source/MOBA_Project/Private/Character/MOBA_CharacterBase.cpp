@@ -4,9 +4,8 @@
 #include "MOBA_Project/Public/Character/MOBA_CharacterBase.h"
 #include "AbilitySystem/MOBA_AbilitySystemComponent.h"
 #include "AbilitySystem/MOBA_AttributeSet.h"
-
-
-
+#include "Components/WidgetComponent.h"
+#include "Widgets/MOBA_OverHeadStats.h"
 
 
 // --> CONSTRUCTOR <--
@@ -24,7 +23,18 @@ AMOBA_CharacterBase::AMOBA_CharacterBase()
 
 	// Create Attribute Set
 	AttributeSet = CreateDefaultSubobject<UMOBA_AttributeSet>(TEXT("AttributeSet"));
+
+	// Create HeadOver Widget
+	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverHeadWidgetComponent"));
+	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
 	
+}
+
+void AMOBA_CharacterBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	ConfigureOverHeadWidget();
 }
 
 
@@ -54,4 +64,27 @@ void AMOBA_CharacterBase::ClientSideInit()
 UAbilitySystemComponent* AMOBA_CharacterBase::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComp;
+}
+
+
+
+
+// --> WIDGET <--
+//----------------------------------------
+
+
+void AMOBA_CharacterBase::ConfigureOverHeadWidget()
+{
+	if (!IsValid(OverHeadWidgetComponent)) return;
+	if (!IsValid(GetAbilitySystemComponent())) return;
+
+	UMOBA_OverHeadStats* OverHeadStatsWidget = Cast<UMOBA_OverHeadStats>(OverHeadWidgetComponent->GetUserWidgetObject());
+	if (OverHeadStatsWidget)
+	{
+		OverHeadStatsWidget->ConfigureWithASC(GetAbilitySystemComponent());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OverHeadWidgetComponent is not set!"));
+	}
 }
