@@ -27,6 +27,10 @@ public:
 	
 	void ServerSideInit();
 	void ClientSideInit();
+	// Only call In Server(for AI)
+	virtual void PossessedBy(AController* NewController) override;
+
+	bool IsLocallyControlledByPlayer() const;
 
 	//------------------------------------------------------------------------------------------------------------------
 	//--->										GAMEPLAY ABILITY													<---
@@ -53,6 +57,14 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Moba|Widget")
 	UWidgetComponent* OverHeadWidgetComponent;
 	
-
 	void ConfigureOverHeadWidget();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Widget|OverHeadWidget")
+	float OverHeadWidgetVisibilityTimerUpdate = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Widget|OverHeadWidget")
+	float OverHeadWidgetVisibilitySquaredRange = 10000000.0f;
+
+	FTimerHandle OverHeadVisibilityWidgetTimerHandle;
+	void UpdateOverHeadVisibilityWidget();
 };

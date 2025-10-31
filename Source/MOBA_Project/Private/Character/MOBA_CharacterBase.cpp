@@ -5,6 +5,7 @@
 #include "AbilitySystem/MOBA_AbilitySystemComponent.h"
 #include "AbilitySystem/MOBA_AttributeSet.h"
 #include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Widgets/MOBA_OverHeadStats.h"
 
 
@@ -56,6 +57,19 @@ void AMOBA_CharacterBase::ClientSideInit()
 	AbilitySystemComp->InitAbilityActorInfo(this, this);
 }
 
+void AMOBA_CharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if (NewController && NewController->IsPlayerController())
+	{
+		ServerSideInit();
+	}
+}
+
+bool AMOBA_CharacterBase::IsLocallyControlledByPlayer() const
+{
+	return GetController() && GetController()->IsLocalPlayerController();
+}
 
 
 // --> GAMEPLAY ABILITY <--
@@ -75,16 +89,37 @@ UAbilitySystemComponent* AMOBA_CharacterBase::GetAbilitySystemComponent() const
 
 void AMOBA_CharacterBase::ConfigureOverHeadWidget()
 {
+	if (IsLocallyControlledByPlayer())
+	{
+		OverHeadWidgetComponent->SetHiddenInGame(true);
+		return;
+	}
 	if (!IsValid(OverHeadWidgetComponent)) return;
 	if (!IsValid(GetAbilitySystemComponent())) return;
+
+	
+	
 
 	UMOBA_OverHeadStats* OverHeadStatsWidget = Cast<UMOBA_OverHeadStats>(OverHeadWidgetComponent->GetUserWidgetObject());
 	if (OverHeadStatsWidget)
 	{
 		OverHeadStatsWidget->ConfigureWithASC(GetAbilitySystemComponent());
+		OverHeadWidgetComponent->SetHiddenInGame(false);
+		GetWorldTimerManager().ClearTimer(OverHeadVisibilityWidgetTimerHandle);
+		GetWorldTimerManager().SetTimer(OverHeadVisibilityWidgetTimerHandle, this, &AMOBA_CharacterBase::UpdateOverHeadVisibilityWidget, OverHeadWidgetVisibilityTimerUpdate, true);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("OverHeadWidgetComponent is not set!"));
 	}
+}
+
+void AMOBA_CharacterBase::UpdateOverHeadVisibilityWidget()
+{
+	APawn* LocalPlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+	if (!IsValid(LocalPlayerPawn)) return;
+
+	float DistanceSquared = FVector::DistSquared(GetActorLocation(), LocalPlayerPawn->GetActorLocation());
+	
+	OverHeadWidgetComponent->SetHiddenInGame(DistanceSquared > OverHeadWidgetVisibilitySquaredRange);
 }
