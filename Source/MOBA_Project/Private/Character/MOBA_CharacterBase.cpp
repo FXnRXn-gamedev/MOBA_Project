@@ -49,6 +49,8 @@ void AMOBA_CharacterBase::ServerSideInit()
 	AbilitySystemComp->InitAbilityActorInfo(this, this);
 	// Init Ability Effect
 	AbilitySystemComp->ApplyInitialEffects();
+	// Init Ability
+	AbilitySystemComp->GiveInitialAbilities();
 }
 
 void AMOBA_CharacterBase::ClientSideInit()

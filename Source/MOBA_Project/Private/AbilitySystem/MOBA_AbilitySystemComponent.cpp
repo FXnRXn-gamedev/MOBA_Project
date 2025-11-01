@@ -17,3 +17,34 @@ void UMOBA_AbilitySystemComponent::ApplyInitialEffects()
 		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }
+
+void UMOBA_AbilitySystemComponent::GiveInitialAbilities()
+{
+	if (!GetOwner() || !GetOwner()->HasAuthority()) return;
+
+	
+	// Init Ability only applicable in server side
+
+	
+	for (const TPair<EMOBA_AbilityInputID, TSubclassOf<UGameplayAbility>>& AbilityPairClass : Abilities)
+	{
+		if(!IsValid(AbilityPairClass.Value))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Abilities Not set in AbilitySystemComponent!!"));
+			return;
+		}
+	
+		GiveAbility(FGameplayAbilitySpec(AbilityPairClass.Value, 0, (int32)AbilityPairClass.Key, nullptr));
+	}
+
+	for (const TPair<EMOBA_AbilityInputID, TSubclassOf<UGameplayAbility>>& BasicAbilityPairClass : BasicAbilities)
+	{
+		if(!IsValid(BasicAbilityPairClass.Value))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Basic Abilities Not set in AbilitySystemComponent!!"));
+			return;
+		}
+	
+		GiveAbility(FGameplayAbilitySpec(BasicAbilityPairClass.Value, 1, (int32)BasicAbilityPairClass.Key, nullptr));
+	}
+}
