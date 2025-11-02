@@ -7,7 +7,7 @@
 #include "GA_MOBA_Combo.generated.h"
 
 
-
+class UAbilityTask_WaitInputPress;
 
 
 UCLASS()
@@ -26,18 +26,31 @@ public:
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData* TriggerEventData) override;
 
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle,
+		const FGameplayAbilityActorInfo* ActorInfo,
+		const FGameplayAbilityActivationInfo ActivationInfo,
+		bool bReplicateEndAbility, bool bWasCancelled) override;
+
+	static FGameplayTag GetComboChangeEventTag();
+	static FGameplayTag GetComboChangeEndEventTag();
+
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	void TryCommitForNextCombo();
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")
-	UAnimMontage* ComboMontage;
+	UAnimMontage* AttackComboMontage;
+	UPROPERTY()
+	TObjectPtr<UAbilityTask_WaitInputPress> CurrentInputPressTask;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")
-	UAnimMontage* ComboMontage2;
+	
+	UFUNCTION()
+	void ComboChangeEventRecieved(FGameplayEventData Data);
+	FName NextComboName;
 
-	mutable bool bUseFirstMontage = true;
-	UAnimMontage* GetRandomComboMontage() const;
-
-
+	void SetupWaitComboInputPress();
+	UFUNCTION()
+	void HandleComboInputPressRecieved(float TimeWaited);
 
 	
 };

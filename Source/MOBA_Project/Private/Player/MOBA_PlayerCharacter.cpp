@@ -3,6 +3,7 @@
 
 #include "MOBA_Project/Public/Player/MOBA_PlayerCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/MOBA_PlayerController.h"
@@ -97,6 +98,11 @@ void AMOBA_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		{
 			EnhancedInputComponent->BindAction(MoveInputAction, ETriggerEvent::Triggered, this, &AMOBA_PlayerCharacter::HandleMoveInput);
 		}
+
+		for (const TPair<EMOBA_AbilityInputID, UInputAction*>& InputActionPair : GameplayAbilityInputActions)
+		{
+			EnhancedInputComponent->BindAction(InputActionPair.Value, ETriggerEvent::Triggered, this, &AMOBA_PlayerCharacter::HandleAbilityInput, InputActionPair.Key);
+		}
 	}
 }
 
@@ -135,6 +141,19 @@ void AMOBA_PlayerCharacter::HandleMoveInput(const FInputActionValue& Value)
 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
+	}
+}
+
+void AMOBA_PlayerCharacter::HandleAbilityInput(const FInputActionValue& Value, EMOBA_AbilityInputID AbilityInputID)
+{
+	bool bPressed = Value.Get<bool>();
+	if (bPressed)
+	{
+		GetAbilitySystemComponent()->AbilityLocalInputPressed((int32)AbilityInputID);
+	}
+	else
+	{
+		GetAbilitySystemComponent()->AbilityLocalInputReleased((int32)AbilityInputID);
 	}
 }
 

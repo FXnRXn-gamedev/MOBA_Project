@@ -6,9 +6,9 @@
 #include "Abilities/GameplayAbility.h"
 #include "MOBA_GameplayAbilityBase.generated.h"
 
-/**
- * 
- */
+class UAnimInstanceBase;
+
+
 UCLASS()
 class MOBA_PROJECT_API UMOBA_GameplayAbilityBase : public UGameplayAbility
 {
@@ -16,6 +16,11 @@ class MOBA_PROJECT_API UMOBA_GameplayAbilityBase : public UGameplayAbility
 	
 	//------------------------------------------------------------------------------------------------------------------
 protected:
+	
+	UAnimInstance* GetOwnerAnimInstance() const;
+	
 	UPROPERTY(EditAnywhere, Category = "Moba|Ability")
 	bool bDebug = false;
+
+	
 };

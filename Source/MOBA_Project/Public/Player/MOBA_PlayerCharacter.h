@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/MOBA_GameplayAbilityTypes.h"
 #include "MOBA_Project/Public/Character/MOBA_CharacterBase.h"
 #include "MOBA_PlayerCharacter.generated.h"
 
@@ -40,6 +41,7 @@ private:
 		void PlayerJump();
 		void HandleLookInput(const FInputActionValue& Value);
 		void HandleMoveInput(const FInputActionValue& Value);
+		void HandleAbilityInput(const FInputActionValue& Value, EMOBA_AbilityInputID AbilityInputID);
 
 	
 #pragma region Settings
@@ -70,6 +72,9 @@ private:
 		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input")
 		UInputMappingContext* MobaInputMappingContext;
 
+		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input")
+		TMap<EMOBA_AbilityInputID, UInputAction*> GameplayAbilityInputActions;
+
 		UPROPERTY(EditDefaultsOnly, Category = "Moba|Input|Actions")
 		UInputAction* JumpAction;
 
@@ -82,19 +87,6 @@ private:
 #pragma endregion
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
 	
 };
