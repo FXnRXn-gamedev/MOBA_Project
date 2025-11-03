@@ -33,24 +33,47 @@ public:
 
 	static FGameplayTag GetComboChangeEventTag();
 	static FGameplayTag GetComboChangeEndEventTag();
+	static FGameplayTag GetComboTargetDamageEventTag();
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
+
+#pragma region Handle Combo Montage
 	void TryCommitForNextCombo();
+	void SetupWaitComboInputPress();
+	FName NextComboName;
+
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")
 	UAnimMontage* AttackComboMontage;
 	UPROPERTY()
 	TObjectPtr<UAbilityTask_WaitInputPress> CurrentInputPressTask;
-
+	
 	
 	UFUNCTION()
 	void ComboChangeEventRecieved(FGameplayEventData Data);
-	FName NextComboName;
-
-	void SetupWaitComboInputPress();
 	UFUNCTION()
 	void HandleComboInputPressRecieved(float TimeWaited);
+	
+#pragma endregion
 
+#pragma region Handle Combo Damage
+	
+
+	UFUNCTION()
+	void DoComboDamage(FGameplayEventData Data);
+
+#pragma endregion
+
+#pragma region GameplayEffects
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffect")
+	TSubclassOf<UGameplayEffect> DefaultComboDamageEffect;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffect")
+	TMap<FName, TSubclassOf<UGameplayEffect>> ComboDamageEffectsMap;
+
+	TSubclassOf<UGameplayEffect> GetDamageEffectForCurrentCombo() const;
+
+#pragma endregion 
 	
 };

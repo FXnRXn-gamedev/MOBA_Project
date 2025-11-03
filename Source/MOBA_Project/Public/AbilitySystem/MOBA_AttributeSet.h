@@ -27,6 +27,9 @@ class MOBA_PROJECT_API UMOBA_AttributeSet : public UAttributeSet
 public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	
 
 #pragma region Attributes
 	//--> Health, MaxHealth, Mana, MaxMana

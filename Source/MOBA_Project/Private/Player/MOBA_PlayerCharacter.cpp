@@ -19,7 +19,7 @@ AMOBA_PlayerCharacter::AMOBA_PlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetCapsuleComponent()->InitCapsuleSize(88.0f, 88.0f);
+	GetCapsuleComponent()->InitCapsuleSize(64.0f, 96.0f);
 
 	//bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;

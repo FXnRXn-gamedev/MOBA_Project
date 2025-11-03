@@ -18,9 +18,23 @@ class MOBA_PROJECT_API UMOBA_GameplayAbilityBase : public UGameplayAbility
 protected:
 	
 	UAnimInstance* GetOwnerAnimInstance() const;
-	
-	UPROPERTY(EditAnywhere, Category = "Moba|Ability")
-	bool bDebug = false;
+
+	TArray<FHitResult> GetHitResultFromSweepLocationTargetData(
+		const FGameplayAbilityTargetDataHandle& TargetDataHandle,
+		float SphereSweepRadius = 30.0f,
+		bool bIgnoreSelf = true) const;
+
+
 
 	
+
+#pragma region Debug
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|Debug")
+	bool bDebug = false;
+
+	UPROPERTY(EditAnywhere, Category = "Moba|Debug")
+	bool bDebugDamageSweep = false;
+
+#pragma endregion 
 };

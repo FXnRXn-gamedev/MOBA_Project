@@ -10,6 +10,8 @@ namespace MOBA_Tags
 		{
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(BasicAttack1, "MOBA_Tags.MOBA_Abilities.MOBA_BasicAbilities.BasicAttack1", "Attack1 Ability Tag");
 		}
+		
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "MOBA_Tags.MOBA_Abilities.Damage", "Damage Event Tag");
 	}
 
 	namespace MOBA_Events
@@ -22,5 +24,6 @@ namespace MOBA_Tags
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(ComboAttack4, "MOBA_Tags.MOBA_Events.PlayerEvent.ComboAttack4", "Combo Event Tag");
 			UE_DEFINE_GAMEPLAY_TAG_COMMENT(ComboAttackEnd, "MOBA_Tags.MOBA_Events.PlayerEvent.ComboAttackEnd", "Combo Event Tag");
 		}
+		
 	}
 }
