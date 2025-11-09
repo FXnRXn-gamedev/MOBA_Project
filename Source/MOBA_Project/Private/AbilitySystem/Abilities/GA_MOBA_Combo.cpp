@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/GA_MOBA_Combo.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_WaitInputPress.h"
@@ -66,7 +67,6 @@ void UGA_MOBA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		WaitTargetingEventTask->EventReceived.AddDynamic(this, &UGA_MOBA_Combo::DoComboDamage);
 		WaitTargetingEventTask->ReadyForActivation();
 	}
-	
 	
 	SetupWaitComboInputPress();
 }
@@ -164,16 +164,21 @@ void UGA_MOBA_Combo::HandleComboInputPressRecieved(float TimeWaited)
 
 void UGA_MOBA_Combo::DoComboDamage(FGameplayEventData Data)
 {
-	TArray<FHitResult> HitResults = GetHitResultFromSweepLocationTargetData(Data.TargetData, 30.0f, true);
+	TArray<FHitResult> HitResults = GetHitResultFromSweepLocationTargetData(Data.TargetData, TargetSweepSphereRadius, true);
 	// Process HitResult to apply damage or effects as needed
 	for (const FHitResult& HitResult : HitResults)
 	{
 		TSubclassOf<UGameplayEffect> GameplayEffect = GetDamageEffectForCurrentCombo();
 		FGameplayEffectSpecHandle EffectSpecHandle = MakeOutgoingGameplayEffectSpec(GameplayEffect, GetAbilityLevel(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo()));
 
+		FGameplayEffectContextHandle EffectContext = MakeEffectContext(GetCurrentAbilitySpecHandle(),GetCurrentActorInfo());
+		EffectContext.AddHitResult(HitResult);
+		EffectSpecHandle.Data->SetContext(EffectContext);
+		
 		ApplyGameplayEffectSpecToTarget(GetCurrentAbilitySpecHandle(), CurrentActorInfo, CurrentActivationInfo,EffectSpecHandle,
 			UAbilitySystemBlueprintLibrary::AbilityTargetDataFromActor(HitResult.GetActor()));
 	}
+	
 }
 
 

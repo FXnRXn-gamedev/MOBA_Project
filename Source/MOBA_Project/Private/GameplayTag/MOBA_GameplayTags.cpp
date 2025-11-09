@@ -13,6 +13,8 @@ namespace MOBA_Tags
 		
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Damage, "MOBA_Tags.MOBA_Abilities.Damage", "Damage Event Tag");
 	}
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Dead, "MOBA_Tags.Stats.Dead", "Dead Event Tag");
 
 	namespace MOBA_Events
 	{

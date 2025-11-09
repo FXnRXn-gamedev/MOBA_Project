@@ -53,6 +53,10 @@ AMOBA_PlayerCharacter::AMOBA_PlayerCharacter()
 }
 
 
+
+
+
+
 // ---> UNREAL MEMEBERS <---
 //----------------------------------------------
 
@@ -105,6 +109,37 @@ void AMOBA_PlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		}
 	}
 }
+
+
+
+
+
+
+// ---> PLAYER DEATH & RESPAWN <---
+//----------------------------------------------
+
+
+void AMOBA_PlayerCharacter::OnDead()
+{
+	Super::OnDead();
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
+}
+
+void AMOBA_PlayerCharacter::OnRespawn()
+{
+	Super::OnRespawn();
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		EnableInput(PlayerController);
+	}
+}
+
+
 
 
 

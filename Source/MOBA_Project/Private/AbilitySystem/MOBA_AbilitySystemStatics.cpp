@@ -9,3 +9,8 @@ FGameplayTag UMOBA_AbilitySystemStatics::GetBasicAttackAbilityTag()
 {
 	return FGameplayTag::RequestGameplayTag("MOBA_Tags.MOBA_Abilities.MOBA_BasicAbilities.BasicAttack1");
 }
+
+FGameplayTag UMOBA_AbilitySystemStatics::GetDeadStatTag()
+{
+	return FGameplayTag::RequestGameplayTag("MOBA_Tags.Stats.Dead");
+}

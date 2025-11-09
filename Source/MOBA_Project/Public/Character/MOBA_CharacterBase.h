@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 
 
 #include "MOBA_CharacterBase.generated.h"
@@ -41,6 +42,9 @@ public:
 	UAttributeSet* GetAttributeSet() const{return AttributeSet;}
 
 private:
+	void BindGASChangeDelegates();
+	void OnDeathTagUpdated(const FGameplayTag Tag, int32 NewCount);
+	
 	UPROPERTY(VisibleAnywhere, Category = "Moba|AbilitySystem")
 	TObjectPtr<UMOBA_AbilitySystemComponent> AbilitySystemComp;
 	
@@ -67,4 +71,19 @@ private:
 
 	FTimerHandle OverHeadVisibilityWidgetTimerHandle;
 	void UpdateOverHeadVisibilityWidget();
+	void SetStatWidgetEnabled(bool bIsEnabled);
+
+	//------------------------------------------------------------------------------------------------------------------
+	//--->										DEATH & RESPAWN													    <---
+	//------------------------------------------------------------------------------------------------------------------
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Death & Respawn")
+	UAnimMontage* DeathMontage;
+
+	void PlayDeathMontage();
+	void StartDeathSequence();
+	void Respawn();
+
+protected:
+	virtual void OnDead();
+	virtual void OnRespawn();
 };

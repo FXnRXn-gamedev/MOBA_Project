@@ -16,5 +16,7 @@ class MOBA_PROJECT_API UMOBA_AbilitySystemStatics : public UBlueprintFunctionLib
 public:
 	UFUNCTION(BlueprintPure, Category = "Moba|Ability Tag")
 	static FGameplayTag GetBasicAttackAbilityTag();
+
+	static FGameplayTag GetDeadStatTag();
 };
 

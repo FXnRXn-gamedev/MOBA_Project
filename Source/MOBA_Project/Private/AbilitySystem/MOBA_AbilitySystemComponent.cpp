@@ -2,6 +2,12 @@
 
 
 #include "AbilitySystem/MOBA_AbilitySystemComponent.h"
+#include "AbilitySystem/MOBA_AttributeSet.h"
+
+UMOBA_AbilitySystemComponent::UMOBA_AbilitySystemComponent()
+{
+	GetGameplayAttributeValueChangeDelegate(UMOBA_AttributeSet::GetHealthAttribute()).AddUObject(this, &UMOBA_AbilitySystemComponent::OnHealthUpdated);
+}
 
 void UMOBA_AbilitySystemComponent::ApplyInitialEffects()
 {
@@ -46,5 +52,15 @@ void UMOBA_AbilitySystemComponent::GiveInitialAbilities()
 		}
 	
 		GiveAbility(FGameplayAbilitySpec(BasicAbilityPairClass.Value, 1, (int32)BasicAbilityPairClass.Key, nullptr));
+	}
+}
+
+void UMOBA_AbilitySystemComponent::OnHealthUpdated(const FOnAttributeChangeData& ChangeData)
+{
+	if (!GetOwner()) return;
+	if (ChangeData.NewValue <= 0.0f && GetOwner()->HasAuthority() && DeathEffect)
+	{
+		FGameplayEffectSpecHandle EffectSpecHandle =MakeOutgoingSpec(DeathEffect, 1, MakeEffectContext());
+		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	}
 }

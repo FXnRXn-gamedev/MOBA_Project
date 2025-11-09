@@ -16,6 +16,8 @@ namespace MOBA_Tags
 		}
 	}
 
+	UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead)
+
 	namespace MOBA_Events
 	{
 		namespace PlayerEvent

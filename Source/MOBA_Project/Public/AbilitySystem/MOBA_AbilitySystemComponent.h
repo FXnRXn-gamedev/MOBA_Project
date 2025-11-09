@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectTypes.h"
 #include "MOBA_GameplayAbilityTypes.h"
 #include "MOBA_AbilitySystemComponent.generated.h"
 
@@ -19,12 +20,18 @@ class MOBA_PROJECT_API UMOBA_AbilitySystemComponent : public UAbilitySystemCompo
 
 	//------------------------------------------------------------------------------------------------------------------
 public:
+	UMOBA_AbilitySystemComponent();
 	void ApplyInitialEffects(); //Init Attribute stat, full stat
 	void GiveInitialAbilities();
 
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	void OnHealthUpdated(const FOnAttributeChangeData& ChangeData);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffects")
+	TSubclassOf<UGameplayEffect> DeathEffect;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffects")
 	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
 

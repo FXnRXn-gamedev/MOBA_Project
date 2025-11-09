@@ -37,6 +37,11 @@ public:
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
+#pragma region Settings
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Settings")
+	float TargetSweepSphereRadius = 30.0f;
+
+#pragma endregion
 
 #pragma region Handle Combo Montage
 	void TryCommitForNextCombo();
@@ -59,7 +64,6 @@ private:
 
 #pragma region Handle Combo Damage
 	
-
 	UFUNCTION()
 	void DoComboDamage(FGameplayEventData Data);
 

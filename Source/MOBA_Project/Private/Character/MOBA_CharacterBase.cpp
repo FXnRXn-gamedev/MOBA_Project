@@ -3,8 +3,11 @@
 
 #include "MOBA_Project/Public/Character/MOBA_CharacterBase.h"
 #include "AbilitySystem/MOBA_AbilitySystemComponent.h"
+#include "AbilitySystem/MOBA_AbilitySystemStatics.h"
 #include "AbilitySystem/MOBA_AttributeSet.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/MOBA_OverHeadStats.h"
 
@@ -28,6 +31,8 @@ AMOBA_CharacterBase::AMOBA_CharacterBase()
 	// Create HeadOver Widget
 	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverHeadWidgetComponent"));
 	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
+
+	BindGASChangeDelegates();
 	
 }
 
@@ -82,7 +87,24 @@ UAbilitySystemComponent* AMOBA_CharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComp;
 }
 
+void AMOBA_CharacterBase::BindGASChangeDelegates()
+{
+	if (IsValid(AbilitySystemComp))
+	{
+		AbilitySystemComp->RegisterGameplayTagEvent(UMOBA_AbilitySystemStatics::GetDeadStatTag()). AddUObject(this, &AMOBA_CharacterBase::OnDeathTagUpdated);
+	}
+}
 
+void AMOBA_CharacterBase::OnDeathTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	if (NewCount != 0)
+	{
+		StartDeathSequence();
+	}else
+	{
+		Respawn();
+	}
+}
 
 
 // --> WIDGET <--
@@ -125,3 +147,55 @@ void AMOBA_CharacterBase::UpdateOverHeadVisibilityWidget()
 	
 	OverHeadWidgetComponent->SetHiddenInGame(DistanceSquared > OverHeadWidgetVisibilitySquaredRange);
 }
+
+void AMOBA_CharacterBase::SetStatWidgetEnabled(bool bIsEnabled)
+{
+	GetWorldTimerManager().ClearTimer(OverHeadVisibilityWidgetTimerHandle);
+	if (bIsEnabled)
+	{
+		ConfigureOverHeadWidget();
+	}else
+	{
+		OverHeadWidgetComponent->SetHiddenInGame(true);
+	}
+}
+
+
+// --> Death & Respawn <--
+//----------------------------------------
+
+
+void AMOBA_CharacterBase::StartDeathSequence()
+{
+	OnDead();
+	PlayDeathMontage();
+	SetStatWidgetEnabled(false);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AMOBA_CharacterBase::Respawn()
+{
+	OnRespawn();
+}
+
+
+void AMOBA_CharacterBase::PlayDeathMontage()
+{
+	if (!DeathMontage)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DeathMontage is not set!"));
+		return;
+	}
+	PlayAnimMontage(DeathMontage);
+}
+
+void AMOBA_CharacterBase::OnDead()
+{
+}
+
+void AMOBA_CharacterBase::OnRespawn()
+{
+}
+
+
