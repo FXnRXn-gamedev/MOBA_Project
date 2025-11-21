@@ -76,12 +76,23 @@ private:
 	//------------------------------------------------------------------------------------------------------------------
 	//--->										DEATH & RESPAWN													    <---
 	//------------------------------------------------------------------------------------------------------------------
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Death & Respawn")
+	float DeathMontageFinishTimeShift = -0.8f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Death & Respawn")
 	UAnimMontage* DeathMontage;
-
+	
+	FTimerHandle DeathMontageTimerHandle;
+	FTransform MeshRelativeTransform;
+	
+	void DeathMontageFinished();
 	void PlayDeathMontage();
 	void StartDeathSequence();
 	void Respawn();
+	
+	// Ragdoll
+	void SetRagdollEnabled(bool bIsEnabled);
 
 protected:
 	virtual void OnDead();

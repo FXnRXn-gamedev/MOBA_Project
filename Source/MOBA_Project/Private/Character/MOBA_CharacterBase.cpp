@@ -41,6 +41,7 @@ void AMOBA_CharacterBase::BeginPlay()
 	Super::BeginPlay();
 
 	ConfigureOverHeadWidget();
+	if (GetMesh()) MeshRelativeTransform = GetMesh()->GetRelativeTransform();
 }
 
 
@@ -164,7 +165,6 @@ void AMOBA_CharacterBase::SetStatWidgetEnabled(bool bIsEnabled)
 // --> Death & Respawn <--
 //----------------------------------------
 
-
 void AMOBA_CharacterBase::StartDeathSequence()
 {
 	OnDead();
@@ -177,7 +177,19 @@ void AMOBA_CharacterBase::StartDeathSequence()
 void AMOBA_CharacterBase::Respawn()
 {
 	OnRespawn();
+	SetRagdollEnabled(false);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
+	SetStatWidgetEnabled(true);
+	
+	if (AbilitySystemComp)
+	{
+		AbilitySystemComp->ApplyFullStatEffect();
+	}
 }
+
+
 
 
 void AMOBA_CharacterBase::PlayDeathMontage()
@@ -187,7 +199,17 @@ void AMOBA_CharacterBase::PlayDeathMontage()
 		UE_LOG(LogTemp, Warning, TEXT("DeathMontage is not set!"));
 		return;
 	}
-	PlayAnimMontage(DeathMontage);
+	float MontageDuration = PlayAnimMontage(DeathMontage);
+	GetWorldTimerManager().SetTimer(
+		DeathMontageTimerHandle, 
+		this, 
+		&AMOBA_CharacterBase::DeathMontageFinished, 
+		MontageDuration + DeathMontageFinishTimeShift);
+}
+
+void AMOBA_CharacterBase::DeathMontageFinished()
+{
+	SetRagdollEnabled(true);
 }
 
 void AMOBA_CharacterBase::OnDead()
@@ -196,6 +218,33 @@ void AMOBA_CharacterBase::OnDead()
 
 void AMOBA_CharacterBase::OnRespawn()
 {
+}
+
+
+
+
+//--- Ragdoll
+void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled)
+{
+	if (bIsEnabled)
+	{
+		if (GetMesh())
+		{
+			GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+			GetMesh()->SetSimulatePhysics(true);
+			GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		}
+	}
+	else
+	{
+		if (GetMesh())
+		{
+			GetMesh()->SetSimulatePhysics(false);
+			GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			GetMesh()->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+			GetMesh()->SetRelativeTransform(MeshRelativeTransform);
+		}
+	}
 }
 
 

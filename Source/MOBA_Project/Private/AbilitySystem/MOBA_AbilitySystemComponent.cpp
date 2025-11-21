@@ -55,12 +55,28 @@ void UMOBA_AbilitySystemComponent::GiveInitialAbilities()
 	}
 }
 
+void UMOBA_AbilitySystemComponent::ApplyFullStatEffect()
+{
+	//if (!GetOwner() || !GetOwner()->HasAuthority()) return;
+	if (!FullStatEffect) return;
+	
+	AuthApplyGameplayEffect(FullStatEffect);
+}
+
 void UMOBA_AbilitySystemComponent::OnHealthUpdated(const FOnAttributeChangeData& ChangeData)
 {
 	if (!GetOwner()) return;
 	if (ChangeData.NewValue <= 0.0f && GetOwner()->HasAuthority() && DeathEffect)
 	{
-		FGameplayEffectSpecHandle EffectSpecHandle =MakeOutgoingSpec(DeathEffect, 1, MakeEffectContext());
-		ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+		AuthApplyGameplayEffect(DeathEffect);
 	}
+}
+
+void UMOBA_AbilitySystemComponent::AuthApplyGameplayEffect(TSubclassOf<UGameplayEffect>& GameplayEffect, int Level)
+{
+	if (!GetOwner() || !GetOwner()->HasAuthority()) return;
+	if (!GameplayEffect) return;
+	
+	FGameplayEffectSpecHandle EffectSpecHandle =MakeOutgoingSpec(GameplayEffect, Level, MakeEffectContext());
+	ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }

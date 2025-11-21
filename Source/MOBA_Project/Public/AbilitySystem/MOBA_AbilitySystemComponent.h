@@ -23,11 +23,16 @@ public:
 	UMOBA_AbilitySystemComponent();
 	void ApplyInitialEffects(); //Init Attribute stat, full stat
 	void GiveInitialAbilities();
-
+	void ApplyFullStatEffect();
 
 	//------------------------------------------------------------------------------------------------------------------
 private:
 	void OnHealthUpdated(const FOnAttributeChangeData& ChangeData);
+	void AuthApplyGameplayEffect(TSubclassOf<UGameplayEffect>& GameplayEffect, int Level = 1);
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffects")
+	TSubclassOf<UGameplayEffect> FullStatEffect;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|GameplayEffects")
 	TSubclassOf<UGameplayEffect> DeathEffect;
