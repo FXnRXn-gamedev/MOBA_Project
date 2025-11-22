@@ -9,6 +9,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 #include "Widgets/MOBA_OverHeadStats.h"
 
 
@@ -77,6 +78,12 @@ void AMOBA_CharacterBase::PossessedBy(AController* NewController)
 bool AMOBA_CharacterBase::IsLocallyControlledByPlayer() const
 {
 	return GetController() && GetController()->IsLocalPlayerController();
+}
+
+void AMOBA_CharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AMOBA_CharacterBase, TeamID);
 }
 
 
@@ -219,7 +226,6 @@ void AMOBA_CharacterBase::OnRespawn()
 
 
 
-
 //--- Ragdoll
 void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled)
 {
@@ -245,3 +251,18 @@ void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled)
 }
 
 
+
+
+// --> TEAM ID SETUP <--
+//----------------------------------------
+
+
+void AMOBA_CharacterBase::SetGenericTeamId(const FGenericTeamId& NewTeamID)
+{
+	TeamID = NewTeamID;
+}
+
+FGenericTeamId AMOBA_CharacterBase::GetGenericTeamId() const
+{
+	return TeamID;
+}

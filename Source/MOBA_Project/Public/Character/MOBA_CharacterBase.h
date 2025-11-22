@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameplayTagContainer.h"
 
 
@@ -17,7 +18,7 @@ class UWidgetComponent;
 
 
 UCLASS()
-class MOBA_PROJECT_API AMOBA_CharacterBase : public ACharacter, public IAbilitySystemInterface
+class MOBA_PROJECT_API AMOBA_CharacterBase : public ACharacter, public IAbilitySystemInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -30,8 +31,8 @@ public:
 	void ClientSideInit();
 	// Only call In Server(for AI)
 	virtual void PossessedBy(AController* NewController) override;
-
 	bool IsLocallyControlledByPlayer() const;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 	//------------------------------------------------------------------------------------------------------------------
 	//--->										GAMEPLAY ABILITY													<---
@@ -97,4 +98,23 @@ private:
 protected:
 	virtual void OnDead();
 	virtual void OnRespawn();
+	
+	
+	//------------------------------------------------------------------------------------------------------------------
+	//--->										TEAM ID																<---
+	//------------------------------------------------------------------------------------------------------------------
+	
+public:
+	// Assign Team Agent to given TeamID
+	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
+	// Retrive TeamID
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	
+private:
+	UPROPERTY(Replicated)
+	FGenericTeamId TeamID;
+	
+	
+	
+	
 };
