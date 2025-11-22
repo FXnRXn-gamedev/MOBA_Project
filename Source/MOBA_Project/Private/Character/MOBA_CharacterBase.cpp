@@ -189,6 +189,15 @@ void AMOBA_CharacterBase::Respawn()
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 	GetMesh()->GetAnimInstance()->StopAllMontages(0.f);
 	SetStatWidgetEnabled(true);
+
+	if (HasAuthority() && GetController())
+	{
+		TWeakObjectPtr<AActor> StartSpot = GetController()->StartSpot;
+		if (StartSpot.IsValid())
+		{
+			SetActorTransform(StartSpot->GetActorTransform(), false, nullptr, ETeleportType::TeleportPhysics);
+		}
+	}
 	
 	if (AbilitySystemComp)
 	{
@@ -223,8 +232,6 @@ void AMOBA_CharacterBase::OnDead()
 void AMOBA_CharacterBase::OnRespawn()
 {
 }
-
-
 
 //--- Ragdoll
 void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled)
