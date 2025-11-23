@@ -164,7 +164,7 @@ void UGA_MOBA_Combo::HandleComboInputPressRecieved(float TimeWaited)
 
 void UGA_MOBA_Combo::DoComboDamage(FGameplayEventData Data)
 {
-	TArray<FHitResult> HitResults = GetHitResultFromSweepLocationTargetData(Data.TargetData, TargetSweepSphereRadius, true);
+	TArray<FHitResult> HitResults = GetHitResultFromSweepLocationTargetData(Data.TargetData, TargetSweepSphereRadius);
 	// Process HitResult to apply damage or effects as needed
 	for (const FHitResult& HitResult : HitResults)
 	{

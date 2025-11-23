@@ -32,6 +32,7 @@ public:
 	
 
 #pragma region Attributes
+private:
 	//--> Health, MaxHealth, Mana, MaxMana
 	UPROPERTY(ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
@@ -54,11 +55,11 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
 
-
-	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Health);
-	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxHealth);
-	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Mana);
-	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxMana);
+public:
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Health)
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxHealth)
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, Mana)
+	ATTRIBUTE_ACCESSORS(UMOBA_AttributeSet, MaxMana)
 	
 
 #pragma endregion
