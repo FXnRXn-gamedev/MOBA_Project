@@ -3,6 +3,7 @@
 
 #include "AI/MOBA_AIController.h"
 
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Character/MOBA_CharacterBase.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -34,11 +35,22 @@ AMOBA_AIController::AMOBA_AIController()
 	
 	// Add SightConfig to AIPerceptionComponent
 	AIPerceptionComponent->ConfigureSense(*SightConfig);
+	
+	// Find Target
+	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::TargetPerceptionUpdated);
 }
+
+
 
 
 //---> UNREAL CALLBACK <---
 //-----------------------------------------
+
+void AMOBA_AIController::BeginPlay()
+{
+	Super::BeginPlay();
+	RunBehaviorTree(AIBehaviorTree);
+}
 
 void AMOBA_AIController::OnPossess(APawn* InPawn)
 {
@@ -50,5 +62,51 @@ void AMOBA_AIController::OnPossess(APawn* InPawn)
 	{
 		PawnAsTeamAgentInterface->SetGenericTeamId(GetGenericTeamId());
 	}
+}
+
+//---> AI PERCEPTION BEHAVIOUR <---
+//-----------------------------------------
+
+void AMOBA_AIController::TargetPerceptionUpdated(AActor* TargetActor, FAIStimulus Stimulus)
+{
+	if (Stimulus.WasSuccessfullySensed())
+	{
+		if (!GetCurrentTarget())
+		{
+			SetActorTarget(TargetActor);
+		}
+	}
+	else
+	{
+		if (GetCurrentTarget() == TargetActor) SetActorTarget(nullptr);
+	}
+}
+
+const UObject* AMOBA_AIController::GetCurrentTarget() const
+{
+	const UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
+	if (!BlackboardComponent) return nullptr;
+	if (!BlackboardComponent->GetValueAsObject(TargetBlackboardKeyName)) return nullptr;
+	
+	return GetBlackboardComponent()->GetValueAsObject(TargetBlackboardKeyName);
+}
+
+void AMOBA_AIController::SetActorTarget(AActor* NewTargetActor)
+{
+	// if (!IsValid(NewTargetActor)) return;
+	// if (NewTargetActor == GetCurrentTarget()) return;
+	
+	UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
+	if (!BlackboardComponent) return;
+
+	if (NewTargetActor)
+	{
+		BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, NewTargetActor);
+	}
+	else
+	{
+		BlackboardComponent->ClearValue(TargetBlackboardKeyName);
+	}
+	
 }
 
