@@ -38,6 +38,9 @@ AMOBA_AIController::AMOBA_AIController()
 	
 	// Find Target
 	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::TargetPerceptionUpdated);
+	
+	// When Player outside of the range , AI  can remember
+	AIPerceptionComponent->OnTargetPerceptionForgotten.AddDynamic(this, &ThisClass::TargetForgotten);
 }
 
 
@@ -64,6 +67,12 @@ void AMOBA_AIController::OnPossess(APawn* InPawn)
 	}
 }
 
+
+
+
+
+
+
 //---> AI PERCEPTION BEHAVIOUR <---
 //-----------------------------------------
 
@@ -78,7 +87,16 @@ void AMOBA_AIController::TargetPerceptionUpdated(AActor* TargetActor, FAIStimulu
 	}
 	else
 	{
-		if (GetCurrentTarget() == TargetActor) SetActorTarget(nullptr);
+		//if (GetCurrentTarget() == TargetActor) SetActorTarget(nullptr);
+	}
+}
+
+void AMOBA_AIController::TargetForgotten(AActor* ForgottenActor)
+{
+	if (!ForgottenActor) return;
+	if (GetCurrentTarget() == ForgottenActor)
+	{
+		SetActorTarget(GetNextPercievedActor());
 	}
 }
 
@@ -108,5 +126,16 @@ void AMOBA_AIController::SetActorTarget(AActor* NewTargetActor)
 		BlackboardComponent->ClearValue(TargetBlackboardKeyName);
 	}
 	
+}
+
+AActor* AMOBA_AIController::GetNextPercievedActor() const
+{
+	if (PerceptionComponent)
+	{
+		TArray<AActor*> Actors;
+		AIPerceptionComponent->GetPerceivedHostileActors(Actors);
+		return Actors.Num() != 0 ? Actors[0] : nullptr;
+	}
+	return nullptr;
 }
 
