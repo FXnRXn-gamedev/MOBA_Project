@@ -10,6 +10,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 #include "Widgets/MOBA_OverHeadStats.h"
 
 
@@ -35,6 +37,9 @@ AMOBA_CharacterBase::AMOBA_CharacterBase()
 
 	BindGASChangeDelegates();
 	
+	// Create Perception Stimuli
+	PerceptionStimuliSourceComponent = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("PerceptionStimuliSourceComponent"));
+	
 }
 
 void AMOBA_CharacterBase::BeginPlay()
@@ -43,6 +48,8 @@ void AMOBA_CharacterBase::BeginPlay()
 
 	ConfigureOverHeadWidget();
 	if (GetMesh()) MeshRelativeTransform = GetMesh()->GetRelativeTransform();
+	
+	PerceptionStimuliSourceComponent->RegisterForSense(UAISense_Sight::StaticClass());
 }
 
 
@@ -69,7 +76,21 @@ void AMOBA_CharacterBase::ClientSideInit()
 void AMOBA_CharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	if (NewController && NewController->IsPlayerController())
+	/**********************************************************************************/
+	//--> For AI characters, the controller is an AAIController, not a player controller, 
+	//--> so ServerSideInit() never gets called, which means:
+	//--> AbilitySystemComp->InitAbilityActorInfo() is never called
+	//--> AbilitySystemComp->ApplyInitialEffects() is never called
+	//--> AbilitySystemComp->GiveInitialAbilities() is never called
+	//--> This is why your AI character's attributes are not being initialized!
+	/**********************************************************************************/
+	
+	// if (NewController && NewController->IsPlayerController()) // <-- This checks for PLAYER controller only!
+	// {
+	// 	//ServerSideInit();
+	// }
+	
+	if (NewController) // <-- This checks for PLAYER controller & AI Ccontroller!
 	{
 		ServerSideInit();
 	}

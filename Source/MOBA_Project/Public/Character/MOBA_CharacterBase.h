@@ -11,7 +11,7 @@
 
 #include "MOBA_CharacterBase.generated.h"
 
-
+class UAIPerceptionStimuliSourceComponent;
 class UAttributeSet;
 class UMOBA_AbilitySystemComponent;
 class UWidgetComponent;
@@ -115,6 +115,15 @@ private:
 	FGenericTeamId TeamID;
 	
 	
+	
+	
+	//------------------------------------------------------------------------------------------------------------------
+	//--->										AI																	<---
+	//------------------------------------------------------------------------------------------------------------------
+	
+private:
+	UPROPERTY()
+	UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
 	
 	
 };
