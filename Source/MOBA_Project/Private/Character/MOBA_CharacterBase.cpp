@@ -56,7 +56,6 @@ void AMOBA_CharacterBase::BeginPlay()
 // --> Server-Client Chain <--
 //----------------------------------------
 
-
 void AMOBA_CharacterBase::ServerSideInit()
 {
 	// Init Ability for this (so Player and enemy both have ability component)
@@ -108,6 +107,8 @@ void AMOBA_CharacterBase::GetLifetimeReplicatedProps(TArray<class FLifetimePrope
 }
 
 
+
+
 // --> GAMEPLAY ABILITY <--
 //----------------------------------------
 
@@ -136,9 +137,11 @@ void AMOBA_CharacterBase::OnDeathTagUpdated(const FGameplayTag Tag, int32 NewCou
 }
 
 
+
+
+
 // --> WIDGET <--
 //----------------------------------------
-
 
 void AMOBA_CharacterBase::ConfigureOverHeadWidget()
 {
@@ -200,11 +203,13 @@ void AMOBA_CharacterBase::StartDeathSequence()
 	SetStatWidgetEnabled(false);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetAIPerceptionStimuliSourceEnabled(false);
 }
 
 void AMOBA_CharacterBase::Respawn()
 {
 	OnRespawn();
+	SetAIPerceptionStimuliSourceEnabled(true);
 	SetRagdollEnabled(false);
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
@@ -254,8 +259,7 @@ void AMOBA_CharacterBase::OnRespawn()
 {
 }
 
-//--- Ragdoll
-void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled)
+void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled) //--- Ragdoll
 {
 	if (bIsEnabled)
 	{
@@ -293,4 +297,16 @@ void AMOBA_CharacterBase::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 FGenericTeamId AMOBA_CharacterBase::GetGenericTeamId() const
 {
 	return TeamID;
+}
+
+void AMOBA_CharacterBase::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
+{
+	if (!PerceptionStimuliSourceComponent) return;
+	if (bIsEnabled)
+	{
+		PerceptionStimuliSourceComponent->RegisterWithPerceptionSystem();
+	}else
+	{
+		PerceptionStimuliSourceComponent->UnregisterFromPerceptionSystem();
+	}
 }

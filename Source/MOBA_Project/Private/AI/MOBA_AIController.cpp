@@ -5,8 +5,12 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Character/MOBA_CharacterBase.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/MOBA_AbilitySystemStatics.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+
 
 
 //---> CONSTRUCTOR <---
@@ -88,6 +92,7 @@ void AMOBA_AIController::TargetPerceptionUpdated(AActor* TargetActor, FAIStimulu
 	else
 	{
 		//if (GetCurrentTarget() == TargetActor) SetActorTarget(nullptr);
+		ForgetActorIfDead(TargetActor);
 	}
 }
 
@@ -137,5 +142,27 @@ AActor* AMOBA_AIController::GetNextPercievedActor() const
 		return Actors.Num() != 0 ? Actors[0] : nullptr;
 	}
 	return nullptr;
+}
+
+void AMOBA_AIController::ForgetActorIfDead(AActor* ActorToForget)
+{
+	const UAbilitySystemComponent* ActorASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToForget);
+	if (!ActorASC) return;
+
+	if (ActorASC->HasMatchingGameplayTag(UMOBA_AbilitySystemStatics::GetDeadStatTag()))
+	{
+		for (UAIPerceptionComponent::TActorPerceptionContainer::TIterator Iter = AIPerceptionComponent->GetPerceptualDataIterator(); Iter; ++Iter)
+		{
+			if (Iter->Key != ActorToForget)
+			{
+				continue;
+			}
+			for (FAIStimulus& Stimulus : Iter->Value.LastSensedStimuli)
+			{
+				Stimulus.SetStimulusAge(TNumericLimits<float>::Max());
+			}
+		}
+	}
+	
 }
 
