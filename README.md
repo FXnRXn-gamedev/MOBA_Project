@@ -17,3 +17,9 @@
 
 #### $\textsf{\color{#326a95}{Multiplayer + Attack Combo using Gas}}$ 
 [![](https://utfs.io/f/nGnSqDveMsqxeIjXhg9ycrCTmNsjWE0kxL8lifbpzV2HuqXY)](https://www.youtube.com/watch?v=mH9x3w1qOmI)
+
+#### $\textsf{\color{#326a95}{Level}}$ 
+[![](https://utfs.io/f/nGnSqDveMsqxrM9I2IWGtWby6wDucJoU1Ala7pdHgjVk9xsN)](https://www.youtube.com/watch?v=fkX5QSlKyjQ)
+
+#### $\textsf{\color{#326a95}{AI}}$ 
+[![](https://utfs.io/f/nGnSqDveMsqxvc1rHkxLDUa0zY3NEVd6GghyHqsuMfBlFoeI)](https://www.youtube.com/watch?v=8lVZvG-T55o)
