@@ -199,6 +199,10 @@ void AMOBA_CharacterBase::SetStatWidgetEnabled(bool bIsEnabled)
 void AMOBA_CharacterBase::StartDeathSequence()
 {
 	OnDead();
+	if (AbilitySystemComp)
+	{
+		AbilitySystemComp->CancelAllAbilities();
+	}
 	PlayDeathMontage();
 	SetStatWidgetEnabled(false);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);

@@ -4,9 +4,11 @@
 #include "AI/MOBA_AIController.h"
 
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Character/MOBA_CharacterBase.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "BrainComponent.h"
 #include "AbilitySystem/MOBA_AbilitySystemStatics.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
@@ -68,6 +70,12 @@ void AMOBA_AIController::OnPossess(APawn* InPawn)
 	if (PawnAsTeamAgentInterface)
 	{
 		PawnAsTeamAgentInterface->SetGenericTeamId(GetGenericTeamId());
+	}
+	
+	UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InPawn);
+	if (PawnASC)
+	{
+		PawnASC->RegisterGameplayTagEvent(UMOBA_AbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ThisClass::PawnDeadTagUpdated);
 	}
 }
 
@@ -164,5 +172,41 @@ void AMOBA_AIController::ForgetActorIfDead(AActor* ActorToForget)
 		}
 	}
 	
+}
+
+void AMOBA_AIController::ClearAndDisableAllSenses()
+{
+	AIPerceptionComponent->AgeStimuli(TNumericLimits<float>::Max());
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(), false);
+	}
+	
+	if (GetBlackboardComponent())
+	{
+		GetBlackboardComponent()->ClearValue(TargetBlackboardKeyName);
+	}
+	
+}
+
+void AMOBA_AIController::EnableAllSenses()
+{
+	for (auto SenseConfigIt = AIPerceptionComponent->GetSensesConfigIterator(); SenseConfigIt; ++SenseConfigIt)
+	{
+		AIPerceptionComponent->SetSenseEnabled((*SenseConfigIt)->GetSenseImplementation(), true);
+	}
+}
+
+void AMOBA_AIController::PawnDeadTagUpdated(const FGameplayTag Tag, int32 Count)
+{
+	if (Count != 0)
+	{
+		GetBrainComponent()->StopLogic("Dead");
+		ClearAndDisableAllSenses();
+	}else
+	{
+		GetBrainComponent()->StartLogic();
+		EnableAllSenses();
+	}
 }
 

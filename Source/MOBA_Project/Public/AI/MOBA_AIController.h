@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "GameplayTagContainer.h"
 #include "MOBA_AIController.generated.h"
 
 class UBehaviorTree;
@@ -54,6 +55,12 @@ private:
 	AActor* GetNextPercievedActor() const;
 	
 	void ForgetActorIfDead(AActor* ActorToForget);
+	
+	//
+	void ClearAndDisableAllSenses();
+	void EnableAllSenses();
+	
+	void PawnDeadTagUpdated(const FGameplayTag Tag, int32 Count);
 	
 };
 
