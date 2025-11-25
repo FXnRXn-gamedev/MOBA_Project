@@ -74,10 +74,11 @@ Plugins/**/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 
+Content/ParagonMinions/*
 Content/ParagonBoris/*
 Content/ParagonCrunch/*
 Content/meadow_grass/*
 Content/KiteDemo/*
 Content/ParagonProps/*
 Content/SampleMap/*
-Content/_PROJECT_/Map/GameMap_Demo.umap
+Content/_PROJECT_/Map/*
