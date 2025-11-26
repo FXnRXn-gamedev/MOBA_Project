@@ -303,6 +303,11 @@ FGenericTeamId AMOBA_CharacterBase::GetGenericTeamId() const
 	return TeamID;
 }
 
+void AMOBA_CharacterBase::OnRep_TeamID()
+{
+	
+}
+
 void AMOBA_CharacterBase::SetAIPerceptionStimuliSourceEnabled(bool bIsEnabled)
 {
 	if (!PerceptionStimuliSourceComponent) return;

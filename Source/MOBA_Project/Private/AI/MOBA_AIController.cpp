@@ -64,7 +64,7 @@ void AMOBA_AIController::BeginPlay()
 void AMOBA_AIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	SetGenericTeamId(FGenericTeamId(0));
+	SetGenericTeamId(FGenericTeamId(DebugGenericTeamID));
 	
 	IGenericTeamAgentInterface* PawnAsTeamAgentInterface = Cast<IGenericTeamAgentInterface>(InPawn);
 	if (PawnAsTeamAgentInterface)

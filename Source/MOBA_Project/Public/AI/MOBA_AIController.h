@@ -32,6 +32,9 @@ public:
 	
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	UPROPERTY(EditDefaultsOnly, Category="Moba|Debug")
+	int32 DebugGenericTeamID = 0;
+	
 	UPROPERTY(EditDefaultsOnly, Category="Moba|AIBehaviour")
 	FName TargetBlackboardKeyName = "Target";
 	
