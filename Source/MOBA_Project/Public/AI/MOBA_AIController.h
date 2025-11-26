@@ -29,11 +29,11 @@ public:
 	
 	virtual void OnPossess(APawn* InPawn) override;
 	
-	
-	//------------------------------------------------------------------------------------------------------------------
-private:
 	UPROPERTY(EditDefaultsOnly, Category="Moba|Debug")
 	int32 DebugGenericTeamID = 0;
+	//------------------------------------------------------------------------------------------------------------------
+private:
+	
 	
 	UPROPERTY(EditDefaultsOnly, Category="Moba|AIBehaviour")
 	FName TargetBlackboardKeyName = "Target";
