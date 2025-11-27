@@ -17,8 +17,12 @@ public:
 	
 	bool IsActive() const;
 	void Activate();
+	
+	void SetGoal(AActor* GoalActor);
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	UPROPERTY(EditDefaultsOnly, Category= "Moba|AI")
+	FName GoalBlackboardKeyName = "Goal";
 	
 	UPROPERTY(EditDefaultsOnly, Category= "Moba|Visual")
 	TMap<FGenericTeamId, USkeletalMesh*> SkinMap;

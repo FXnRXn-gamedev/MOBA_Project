@@ -47,4 +47,7 @@ private:
 	AMOBA_Minion* GetNextAvailableMinion() const;
 	
 	
+	//--> GOAL <--
+	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
+	AActor* GoalActor;
 };

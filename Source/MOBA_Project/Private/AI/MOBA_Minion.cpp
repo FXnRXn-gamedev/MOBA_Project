@@ -4,7 +4,10 @@
 #include "AI/MOBA_Minion.h"
 
 #include "AbilitySystemComponent.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "AbilitySystem/MOBA_AbilitySystemStatics.h"
+
 
 
 void AMOBA_Minion::SetGenericTeamId(const FGenericTeamId& NewTeamID)
@@ -23,6 +26,8 @@ void AMOBA_Minion::Activate()
 	GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(UMOBA_AbilitySystemStatics::GetDeadStatTag()));
 }
 
+
+
 void AMOBA_Minion::PickSkinBasedOnTeamId()
 {
 	USkeletalMesh** Skin = SkinMap.Find(GetGenericTeamId());
@@ -34,5 +39,20 @@ void AMOBA_Minion::PickSkinBasedOnTeamId()
 void AMOBA_Minion::OnRep_TeamID()
 {
 	PickSkinBasedOnTeamId();
+}
+
+
+//--------------------------------
+// --> SET GOAL <--
+
+void AMOBA_Minion::SetGoal(AActor* GoalActor)
+{
+	if (AAIController* AIController = GetController<AAIController>())
+	{
+		if (UBlackboardComponent* BlackboardComponent = AIController->GetBlackboardComponent())
+		{
+			BlackboardComponent->SetValueAsObject(GoalBlackboardKeyName, GoalActor);
+		}
+	}
 }
 

@@ -36,6 +36,7 @@ void AMOBA_MinionBarrack::SpawnNewMinion(int SpawnAmount)
 		AMOBA_Minion* NewMinion = GetWorld()->SpawnActorDeferred<AMOBA_Minion>(MinionClass, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		NewMinion->SetGenericTeamId(BarrackTeamID);
 		NewMinion->FinishSpawning(SpawnTransform);
+		NewMinion->SetGoal(GoalActor);
 		MinionPool.Add(NewMinion);
 	}
 }
@@ -43,7 +44,7 @@ void AMOBA_MinionBarrack::SpawnNewMinion(int SpawnAmount)
 
 
 //--------------------------------------
-// --> PERIODIC SPAWN <--
+// --> PERIODIC SPAWN Group<--
 
 
 void AMOBA_MinionBarrack::SpawnNewGroup()
