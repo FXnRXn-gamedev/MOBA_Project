@@ -34,4 +34,17 @@ private:
 	
 	const APlayerStart* GetNextSpawnSpot();
 	void SpawnNewMinion(int SpawnAmount);
+	
+	//--> Periodic Spawn <--
+	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
+	int MinionPerGroup = 3;
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
+	float GroupSpawnInterval = 5.f;
+	
+	FTimerHandle SpawnIntervalTimerHandle;
+	void SpawnNewGroup();
+	AMOBA_Minion* GetNextAvailableMinion() const;
+	
+	
 };

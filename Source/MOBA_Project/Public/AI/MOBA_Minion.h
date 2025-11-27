@@ -15,6 +15,8 @@ class MOBA_PROJECT_API AMOBA_Minion : public AMOBA_CharacterBase
 public:
 	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override;
 	
+	bool IsActive() const;
+	void Activate();
 	//------------------------------------------------------------------------------------------------------------------
 private:
 	

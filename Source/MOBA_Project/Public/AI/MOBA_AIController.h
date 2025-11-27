@@ -29,8 +29,8 @@ public:
 	
 	virtual void OnPossess(APawn* InPawn) override;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Moba|Debug")
-	int32 DebugGenericTeamID = 0;
+	// UPROPERTY(EditDefaultsOnly, Category="Moba|Debug")
+	// int32 DebugGenericTeamID = 0;
 	//------------------------------------------------------------------------------------------------------------------
 private:
 	

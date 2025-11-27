@@ -64,12 +64,14 @@ void AMOBA_AIController::BeginPlay()
 void AMOBA_AIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	SetGenericTeamId(FGenericTeamId(DebugGenericTeamID));
+	//SetGenericTeamId(FGenericTeamId(DebugGenericTeamID));
 	
 	IGenericTeamAgentInterface* PawnAsTeamAgentInterface = Cast<IGenericTeamAgentInterface>(InPawn);
 	if (PawnAsTeamAgentInterface)
 	{
-		PawnAsTeamAgentInterface->SetGenericTeamId(GetGenericTeamId());
+		SetGenericTeamId(PawnAsTeamAgentInterface->GetGenericTeamId());
+		ClearAndDisableAllSenses();
+		EnableAllSenses();
 	}
 	
 	UAbilitySystemComponent* PawnASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InPawn);
