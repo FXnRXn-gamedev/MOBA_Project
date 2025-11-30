@@ -47,6 +47,7 @@ private:
 	void TryCommitForNextCombo();
 	void SetupWaitComboInputPress();
 	FName NextComboName;
+	bool bInputReceived = false; //--> NEWLY ADDED : Added flag to track input press
 
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")

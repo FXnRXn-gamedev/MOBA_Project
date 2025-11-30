@@ -77,7 +77,11 @@ private:
 	//------------------------------------------------------------------------------------------------------------------
 	//--->										DEATH & RESPAWN													    <---
 	//------------------------------------------------------------------------------------------------------------------
+public:
+	bool IsDead() const;
+	void RespawnImmediately();
 	
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Death & Respawn")
 	float DeathMontageFinishTimeShift = -0.8f;
 	

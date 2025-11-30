@@ -6,17 +6,26 @@
 #include "AI/MOBA_Minion.h"
 #include "GameFramework/PlayerStart.h"
 
+//--------------------------------------------------
+// UNREAL CALLBACK
+//--------------------------------------------------
 
 void AMOBA_MinionBarrack::BeginPlay()
 {
 	Super::BeginPlay();
 	if (HasAuthority())
 	{
-		//SpawnNewMinion(5);
+		//--> [DEBUG TESTING] : SpawnNewMinion(5);
 		GetWorldTimerManager().SetTimer(SpawnIntervalTimerHandle, this, &ThisClass::SpawnNewGroup, GroupSpawnInterval, true);
 	}
 	
 }
+
+
+
+//--------------------------------------------------
+// SPAWN CONFIGURATION
+//--------------------------------------------------
 
 const APlayerStart* AMOBA_MinionBarrack::GetNextSpawnSpot()
 {
@@ -43,12 +52,14 @@ void AMOBA_MinionBarrack::SpawnNewMinion(int SpawnAmount)
 
 
 
-//--------------------------------------
-// --> PERIODIC SPAWN Group<--
 
+//--------------------------------------------------
+// PERIODIC SPAWN GROUP
+//--------------------------------------------------
 
 void AMOBA_MinionBarrack::SpawnNewGroup()
 {
+	
 	int i = MinionPerGroup;
 	while (i > 0)
 	{
@@ -75,3 +86,11 @@ AMOBA_Minion* AMOBA_MinionBarrack::GetNextAvailableMinion() const
 	
 	return nullptr;
 }
+
+
+
+
+
+
+
+

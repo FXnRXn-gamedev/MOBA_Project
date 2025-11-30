@@ -15,13 +15,15 @@ class MOBA_PROJECT_API AMOBA_MinionBarrack : public AActor
 public:
 	virtual void BeginPlay() override;
 	
+	
 	//------------------------------------------------------------------------------------------------------------------
 private:
+	
+	//--------------------------------------------------
+	// BARRACK CONFIGURATION
+	//--------------------------------------------------
 	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
 	FGenericTeamId BarrackTeamID;
-	
-	UPROPERTY()
-	TArray<class AMOBA_Minion*> MinionPool;
 	
 	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
 	TSubclassOf<class AMOBA_Minion> MinionClass;
@@ -29,13 +31,19 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
 	TArray<class APlayerStart*> SpawnSpots;
 	
+	
 	int NextSpawnSpotIndex = -1;
 	
 	
 	const APlayerStart* GetNextSpawnSpot();
 	void SpawnNewMinion(int SpawnAmount);
 	
-	//--> Periodic Spawn <--
+	
+	
+	//--------------------------------------------------
+	// PERIODIC SPAWN
+	//--------------------------------------------------
+	
 	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
 	int MinionPerGroup = 3;
 	
@@ -47,7 +55,19 @@ private:
 	AMOBA_Minion* GetNextAvailableMinion() const;
 	
 	
-	//--> GOAL <--
+	//--------------------------------------------------
+	// GOAL
+	//--------------------------------------------------
+	
 	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack")
 	AActor* GoalActor;
+	
+	
+	//--------------------------------------------------
+	// POOL MANAGEMENT
+	//--------------------------------------------------
+	UPROPERTY()
+	TArray<class AMOBA_Minion*> MinionPool;
+
+	
 };

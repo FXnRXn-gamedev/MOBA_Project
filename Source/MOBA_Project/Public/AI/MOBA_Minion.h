@@ -6,6 +6,12 @@
 #include "Character/MOBA_CharacterBase.h"
 #include "MOBA_Minion.generated.h"
 
+
+
+
+
+
+
 UCLASS()
 class MOBA_PROJECT_API AMOBA_Minion : public AMOBA_CharacterBase
 {
@@ -19,6 +25,7 @@ public:
 	void Activate();
 	
 	void SetGoal(AActor* GoalActor);
+	
 	//------------------------------------------------------------------------------------------------------------------
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Moba|AI")

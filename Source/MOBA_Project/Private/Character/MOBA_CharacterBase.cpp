@@ -193,6 +193,8 @@ void AMOBA_CharacterBase::SetStatWidgetEnabled(bool bIsEnabled)
 }
 
 
+
+
 // --> Death & Respawn <--
 //----------------------------------------
 
@@ -252,7 +254,7 @@ void AMOBA_CharacterBase::PlayDeathMontage()
 
 void AMOBA_CharacterBase::DeathMontageFinished()
 {
-	SetRagdollEnabled(true);
+	if (IsDead()) SetRagdollEnabled(true);
 }
 
 void AMOBA_CharacterBase::OnDead()
@@ -281,12 +283,26 @@ void AMOBA_CharacterBase::SetRagdollEnabled(bool bIsEnabled) //--- Ragdoll
 			GetMesh()->SetSimulatePhysics(false);
 			GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			GetMesh()->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-			GetMesh()->SetRelativeTransform(MeshRelativeTransform);
+			// GetMesh()->SetRelativeTransform(MeshRelativeTransform);
+			//--> FIX : Only restore location and rotation, preserve current scale
+			FTransform CurrentTransform = GetMesh()->GetRelativeTransform();
+			FTransform RestoredTransform = MeshRelativeTransform;
+			RestoredTransform.SetScale3D(CurrentTransform.GetScale3D());
+			GetMesh()->SetRelativeTransform(RestoredTransform);
+			
 		}
 	}
 }
 
+bool AMOBA_CharacterBase::IsDead() const
+{
+	return GetAbilitySystemComponent()->HasMatchingGameplayTag(UMOBA_AbilitySystemStatics::GetDeadStatTag());
+}
 
+void AMOBA_CharacterBase::RespawnImmediately()
+{
+	if (HasAuthority()) GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(UMOBA_AbilitySystemStatics::GetDeadStatTag()));
+}
 
 
 // --> TEAM ID SETUP <--

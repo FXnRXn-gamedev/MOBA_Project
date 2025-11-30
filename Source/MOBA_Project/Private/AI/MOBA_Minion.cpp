@@ -2,11 +2,9 @@
 
 
 #include "AI/MOBA_Minion.h"
-
-#include "AbilitySystemComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "AbilitySystem/MOBA_AbilitySystemStatics.h"
+
 
 
 
@@ -18,12 +16,14 @@ void AMOBA_Minion::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 
 bool AMOBA_Minion::IsActive() const
 {
-	return !GetAbilitySystemComponent()->HasMatchingGameplayTag(UMOBA_AbilitySystemStatics::GetDeadStatTag());
+	//return !GetAbilitySystemComponent()->HasMatchingGameplayTag(UMOBA_AbilitySystemStatics::GetDeadStatTag());
+	return !IsDead();
 }
 
 void AMOBA_Minion::Activate()
 {
-	GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(UMOBA_AbilitySystemStatics::GetDeadStatTag()));
+	//GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(FGameplayTagContainer(UMOBA_AbilitySystemStatics::GetDeadStatTag()));
+	RespawnImmediately();
 }
 
 
@@ -55,4 +55,5 @@ void AMOBA_Minion::SetGoal(AActor* GoalActor)
 		}
 	}
 }
+
 

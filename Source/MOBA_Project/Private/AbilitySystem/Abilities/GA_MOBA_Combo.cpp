@@ -37,7 +37,8 @@ void UGA_MOBA_Combo::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	
 	// Initialize the input task pointer
 	CurrentInputPressTask = nullptr;
-
+	bInputReceived = false; //--> NEWLY ADDED : Initialize track input press
+	NextComboName = NAME_None; //--> NEWLY ADDED : Initialize NextComboName
 	
 	if (AttackComboMontage != nullptr && HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
 	{
@@ -112,14 +113,21 @@ void UGA_MOBA_Combo::ComboChangeEventRecieved(FGameplayEventData Data)
 	if (EventTag == GetComboChangeEndEventTag())
 	{
 		NextComboName = NAME_None;
+		bInputReceived = false; //--> NEWLY ADDED : Reset input flag when combo window ends
 		return;
 	}
 	TArray<FName> TagNames;
 	UGameplayTagsManager& GameplayTagsManager = UGameplayTagsManager::Get();
 	GameplayTagsManager.SplitGameplayTagFName(EventTag, TagNames);
 	NextComboName = TagNames.Last();
+	
+	//--> NEWLY ADDED : Check if we already input for this combo window
+	if (bInputReceived)
+	{
+		TryCommitForNextCombo();
+		bInputReceived = false; // Reset the flag after commiting
+	}
 }
-
 
 void UGA_MOBA_Combo::TryCommitForNextCombo()
 {
@@ -127,8 +135,16 @@ void UGA_MOBA_Combo::TryCommitForNextCombo()
 
 	UAnimInstance* OwnerAnimInstance = GetOwnerAnimInstance();
 	if (!OwnerAnimInstance) return;
+	
+	FName CurrentSection = OwnerAnimInstance->Montage_GetCurrentSection(AttackComboMontage);
+	
+	//--> NEWLY ADDED : Only commit if we're not already in the next section
+	if (CurrentSection != NextComboName)
+	{
+		OwnerAnimInstance->Montage_SetNextSection(CurrentSection, NextComboName, AttackComboMontage);
+	}
 
-	OwnerAnimInstance->Montage_SetNextSection(OwnerAnimInstance->Montage_GetCurrentSection(AttackComboMontage), NextComboName, AttackComboMontage);
+	//OwnerAnimInstance->Montage_SetNextSection(OwnerAnimInstance->Montage_GetCurrentSection(AttackComboMontage), NextComboName, AttackComboMontage);
 }
 
 
@@ -145,7 +161,7 @@ void UGA_MOBA_Combo::SetupWaitComboInputPress()
 		CurrentInputPressTask->EndTask();
 	}
 
-	CurrentInputPressTask = UAbilityTask_WaitInputPress::WaitInputPress(this);
+	CurrentInputPressTask = UAbilityTask_WaitInputPress::WaitInputPress(this, false); //--> NEWLY ADDED : Use false to not trigger on already pressed input
 	if (!CurrentInputPressTask) return;
 	
 	CurrentInputPressTask->OnPress.AddDynamic(this, &UGA_MOBA_Combo::HandleComboInputPressRecieved);
@@ -154,8 +170,19 @@ void UGA_MOBA_Combo::SetupWaitComboInputPress()
 
 void UGA_MOBA_Combo::HandleComboInputPressRecieved(float TimeWaited)
 {
-	SetupWaitComboInputPress();
-	TryCommitForNextCombo();
+	// Mark that input was received
+	bInputReceived = true;
+	
+	//--> If we already have a next combo name (we're in a combo window), commit immediately
+	if (NextComboName != NAME_None)
+	{
+		TryCommitForNextCombo();
+		bInputReceived = false; // Reset after committing
+	}
+	//--> Otherwise, wait for the combo window event to arrive (handled in ComboChangeEventRecieved)
+	
+	//SetupWaitComboInputPress();
+	//TryCommitForNextCombo();
 }
 
 
