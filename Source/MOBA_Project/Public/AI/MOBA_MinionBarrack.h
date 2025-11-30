@@ -66,8 +66,19 @@ private:
 	//--------------------------------------------------
 	// POOL MANAGEMENT
 	//--------------------------------------------------
+	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack|Pool", meta = (ClampMin = "1"))
+	int32 InitialPoolSize = 20;
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|MinionBarrack|Pool")
+	bool bAllowPoolGrowth = true;
+	
 	UPROPERTY()
 	TArray<class AMOBA_Minion*> MinionPool;
+	
+	void InitializeMinionPool();
+	AMOBA_Minion* SpawnMinionForPool();
+	AMOBA_Minion* GetInactiveMinion();
+	void ReturnMinionToPool(AMOBA_Minion* Minion);
 
 	
 };

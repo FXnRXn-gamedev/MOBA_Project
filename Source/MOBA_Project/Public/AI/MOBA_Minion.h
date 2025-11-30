@@ -23,6 +23,7 @@ public:
 	
 	bool IsActive() const;
 	void Activate();
+	void Deactivate();
 	
 	void SetGoal(AActor* GoalActor);
 	
