@@ -14,6 +14,10 @@ void UMOBA_AttributeValueGauge::NativePreConstruct()
 	// Init Progress Bar Color
 	ProgressBar->SetFillColorAndOpacity(BarColor);
 	
+	//Init visibility
+	ValueText->SetFont(ValueTextFont);
+	ValueText->SetVisibility(bValueTextVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	ProgressBar->SetVisibility(bProgressBarVisible ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 }
 
 
@@ -43,6 +47,10 @@ void UMOBA_AttributeValueGauge::SetAndBoundToGameplayAttribute(UAbilitySystemCom
 
 
 
+//--------------------------------------------------
+// WIDGET VALUE CHANGE/SET
+//--------------------------------------------------
+
 void UMOBA_AttributeValueGauge::ValueChanged(const FOnAttributeChangeData& ChangeData)
 {
 	SetValue(ChangeData.NewValue, CachedMaxValue);
@@ -52,7 +60,6 @@ void UMOBA_AttributeValueGauge::MaxValueChanged(const FOnAttributeChangeData& Ch
 {
 	SetValue(CachedValue, ChangeData.NewValue);
 }
-
 
 void UMOBA_AttributeValueGauge::SetValue(float NewValue, float MaxValue)
 {

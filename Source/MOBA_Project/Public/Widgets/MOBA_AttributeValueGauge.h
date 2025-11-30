@@ -22,9 +22,6 @@ class MOBA_PROJECT_API UMOBA_AttributeValueGauge : public UUserWidget
 	//------------------------------------------------------------------------------------------------------------------
 public:
 	virtual void NativePreConstruct() override;
-
-
-	
 	void SetAndBoundToGameplayAttribute(UAbilitySystemComponent* AbilitySystemComp, const FGameplayAttribute& Attribute, const FGameplayAttribute& MaxAttribute);
 	void SetValue(float NewValue, float MaxValue);
 
@@ -38,9 +35,21 @@ private:
 	float CachedMaxValue;
 
 
+	//--------------------------------------------------
+	// WIDGET ATTRIBUTE
+	//--------------------------------------------------
 	
 	UPROPERTY(EditAnywhere, Category = "Moba|Widgets|Attributes")
 	FLinearColor BarColor;
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|Widgets|Attributes")
+	FSlateFontInfo ValueTextFont;
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|Widgets|Attributes")
+	bool bValueTextVisible = true;
+	
+	UPROPERTY(EditAnywhere, Category = "Moba|Widgets|Attributes")
+	bool bProgressBarVisible = true;
 	
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	UProgressBar* ProgressBar;
