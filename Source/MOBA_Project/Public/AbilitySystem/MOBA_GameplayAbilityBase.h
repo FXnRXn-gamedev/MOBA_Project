@@ -27,9 +27,6 @@ protected:
 		bool bIgnoreSelf = true) const;
 
 
-
-	
-
 #pragma region Debug
 	
 	UPROPERTY(EditAnywhere, Category = "Moba|Debug")

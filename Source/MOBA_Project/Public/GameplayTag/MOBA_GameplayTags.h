@@ -10,6 +10,10 @@ namespace MOBA_Tags
 {
 	namespace MOBA_Abilities
 	{
+		UE_DECLARE_GAMEPLAY_TAG_EXTERN(AggroPunchLaunch)
+		
+		
+		
 		namespace MOBA_BasicAbilities
 		{
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(BasicAttack1)
@@ -31,4 +35,7 @@ namespace MOBA_Tags
 			UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage)
 		}
 	}
+	
+	
+	
 }
