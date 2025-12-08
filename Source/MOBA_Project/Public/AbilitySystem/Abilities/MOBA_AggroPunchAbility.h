@@ -6,9 +6,9 @@
 #include "AbilitySystem/MOBA_GameplayAbilityBase.h"
 #include "MOBA_AggroPunchAbility.generated.h"
 
-/**
- * 
- */
+
+
+
 UCLASS()
 class MOBA_PROJECT_API UMOBA_AggroPunchAbility : public UMOBA_GameplayAbilityBase
 {
@@ -52,17 +52,13 @@ private:
 	//--------------------------------------------------
 	// DASH MOVE
 	//--------------------------------------------------
-	UPROPERTY(EditDefaultsOnly, Category = "Moba|Movement")
-	float DashDistance = 400.0f;
-    
-	UPROPERTY(EditDefaultsOnly, Category = "Moba|Movement")
-	float DashDuration = 0.3f;
-    
-	UPROPERTY(EditDefaultsOnly, Category = "Moba|Movement")
-	bool bUseRootMotion = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Dash")
+	float WarpDistance = 600.f;
 	
 	
-	void PerformForwardDash();
+	void DoMotionWarpingDash(ACharacter* Character, const FVector& Direction);
+	
 	
 	UFUNCTION()
 	void StartAggroLaunch(FGameplayEventData EventData);
@@ -70,6 +66,9 @@ private:
 	//--------------------------------------------------
 	// MONTAGE
 	//--------------------------------------------------
+	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")
+	FName AggroPunchWarpingSectionName = "AggroDash";
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Moba|Animation")
 	UAnimMontage* AggroPunchMontage;
 	

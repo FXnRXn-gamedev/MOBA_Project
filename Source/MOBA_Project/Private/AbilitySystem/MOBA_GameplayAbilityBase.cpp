@@ -5,6 +5,12 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
+
+
+// =====================================================================================================================
+// ---> CONSTRUCTOR & UNREAL CALLBACK <---
+// =====================================================================================================================
+
 UAnimInstance* UMOBA_GameplayAbilityBase::GetOwnerAnimInstance() const
 {
 	UAnimInstance* AnimInstance = nullptr;
@@ -17,6 +23,10 @@ UAnimInstance* UMOBA_GameplayAbilityBase::GetOwnerAnimInstance() const
 	return AnimInstance;
 }
 
+
+// =====================================================================================================================
+// ---> ABILITY HIT DETECTION<---
+// =====================================================================================================================
 TArray<FHitResult> UMOBA_GameplayAbilityBase::GetHitResultFromSweepLocationTargetData(
 	const FGameplayAbilityTargetDataHandle& TargetDataHandle, 
 	float SphereSweepRadius, 
@@ -78,3 +88,24 @@ TArray<FHitResult> UMOBA_GameplayAbilityBase::GetHitResultFromSweepLocationTarge
 	}
 	return OutHitResults;
 }
+
+
+
+
+// =====================================================================================================================
+// ---> PUSH <---
+// =====================================================================================================================
+
+void UMOBA_GameplayAbilityBase::PushSelf(const FVector& PushDirection, float Strength) const
+{
+	if (!bIgnorePushSelf)
+	{
+		ACharacter* OwningAvatarCharacter = GetOwningAvatarCharacter();
+		if (OwningAvatarCharacter)
+		{
+			OwningAvatarCharacter->LaunchCharacter(PushDirection.GetSafeNormal() * Strength, true, true);
+		}
+	}
+}
+
+

@@ -2,9 +2,13 @@
 
 
 #include "AbilitySystem/Abilities/MOBA_AggroPunchAbility.h"
+
+#include "MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Utility/MOBA_DebugHelper.h"
 
 
@@ -38,10 +42,29 @@ void UMOBA_AggroPunchAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 		return;
 	}
 	
+	ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+	if (!IsValid(Character))
+	{
+		K2_EndAbility();
+		return;
+	}
+	
+	// Get Direction
+	FVector Direction = Character->GetActorForwardVector();
+	//if (Direction.IsNearlyZero()) Direction = Character->GetActorForwardVector();
+	if (Direction.IsNearlyZero())
+	{
+		Direction = Character->GetControlRotation().Vector();
+		Direction.Z = 0.0f; // Keep it horizontal
+		Direction.Normalize();
+	}
+	Direction.Normalize();
+	
+	
 	// Runs on: Server + Client (with prediction)
 	if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
 	{
-		if (!bUseRootMotion) PerformForwardDash();
+		DoMotionWarpingDash(Character, Direction);
 	}
 	
 	// Runs on: Server ONLY
@@ -58,13 +81,20 @@ void UMOBA_AggroPunchAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 		PlayAggroPunchMontageTask->OnCompleted.AddDynamic(this, &ThisClass::K2_EndAbility);
 		PlayAggroPunchMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::K2_EndAbility);
 		PlayAggroPunchMontageTask->ReadyForActivation();
+		
+		
+	}
+
+	if (HasAuthorityOrPredictionKey(ActorInfo, &ActivationInfo))
+	{
+		UAbilityTask_WaitGameplayEvent* WaitAggroPunchEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, GetAggroPunchLaunchTag());
+		WaitAggroPunchEventTask->EventReceived.AddDynamic(this, &ThisClass::StartAggroLaunch);
+		WaitAggroPunchEventTask->ReadyForActivation();
 	}
 	
 	
 	
-	UAbilityTask_WaitGameplayEvent* WaitAggroPunchEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, GetAggroPunchLaunchTag());
-	WaitAggroPunchEventTask->EventReceived.AddDynamic(this, &ThisClass::StartAggroLaunch);
-	WaitAggroPunchEventTask->ReadyForActivation();
+	
 }
 
 void UMOBA_AggroPunchAbility::EndAbility(const FGameplayAbilitySpecHandle Handle,
@@ -97,35 +127,38 @@ FGameplayTag UMOBA_AggroPunchAbility::GetAggroPunchLaunchTag()
 
 
 
-
-
 // =====================================================================================================================
 // ---> ABILITY FUNCTION<---
 // =====================================================================================================================
+// ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+// if (!IsValid(Character)) return;
+// 	
+// UCharacterMovementComponent* CharacterMovementComp = Character->GetCharacterMovement();
+// if (!CharacterMovementComp) return;
 
 
-void UMOBA_AggroPunchAbility::PerformForwardDash()
+void UMOBA_AggroPunchAbility::DoMotionWarpingDash(ACharacter* Character, const FVector& Direction)
 {
-	ACharacter* Character = Cast<ACharacter>(GetAvatarActorFromActorInfo());
-	if (!IsValid(Character)) return;
-	
+	if (!AggroPunchMontage)
+	{
+		K2_EndAbility();
+		return;
+	}
 	UCharacterMovementComponent* CharacterMovementComp = Character->GetCharacterMovement();
 	if (!CharacterMovementComp) return;
 	
-	// Get Forward Direction
-	FVector ForwardDirection = Character->GetActorForwardVector();
-	ForwardDirection.Z = 0.0f;
-	ForwardDirection.Normalize();
 	
-	// Calculate launch velocity
-	float LaunchSpeed = DashDistance / DashDuration;
-	FVector LaunchVelocity = ForwardDirection * LaunchSpeed;
-	
-	// Launch character forward
-	// bXYOverride = true: Override horizontal velocity
-	// bZOverride = false: Preserve vertical velocity (gravity)
-	Character->LaunchCharacter(LaunchVelocity, true, false);
+	UMotionWarpingComponent* Warp = Character->FindComponentByClass<UMotionWarpingComponent>();
+	if (Warp)
+	{
+		FVector Start = Character->GetActorLocation();
+		FVector Target = Start + Direction * WarpDistance;
+
+		Warp->AddOrUpdateWarpTargetFromLocation(AggroPunchWarpingSectionName, Target);
+	}
 }
+
+
 
 void UMOBA_AggroPunchAbility::StartAggroLaunch(FGameplayEventData EventData)
 {

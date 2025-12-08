@@ -10,10 +10,10 @@ public class MOBA_Project : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", 
-			"CoreUObject", 
-			"Engine", 
-			"InputCore", 
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
 			"EnhancedInput",
 			"UMG",
 			"Slate",
@@ -21,7 +21,8 @@ public class MOBA_Project : ModuleRules
 			"GameplayTasks",
 			"GameplayAbilities",
 			"GameplayTags",
-			"AIModule"
+			"AIModule",
+			"MotionWarping"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

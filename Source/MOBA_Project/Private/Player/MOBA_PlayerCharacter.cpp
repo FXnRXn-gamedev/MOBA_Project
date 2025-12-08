@@ -2,6 +2,7 @@
 
 
 #include "MOBA_Project/Public/Player/MOBA_PlayerCharacter.h"
+#include "Player/MOBA_PlayerCharacter.h"
 
 #include "AbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
@@ -49,6 +50,9 @@ AMOBA_PlayerCharacter::AMOBA_PlayerCharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 800.0f;
 	GetCharacterMovement()->MaxAcceleration = 1250.0f;
 	GetCharacterMovement()->GravityScale = 1.25f;
+	
+	// Motion Warping
+	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MOTION_WARPING_COMPONENT"));
 	
 }
 

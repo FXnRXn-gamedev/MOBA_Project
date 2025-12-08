@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystem/MOBA_GameplayAbilityTypes.h"
 #include "MOBA_Project/Public/Character/MOBA_CharacterBase.h"
+#include "MotionWarpingComponent.h"
 #include "MOBA_PlayerCharacter.generated.h"
 
 
@@ -13,7 +14,6 @@ class UInputAction;
 class UInputMappingContext;
 class USpringArmComponent;
 class UCameraComponent;
-
 
 
 
@@ -47,6 +47,8 @@ private:
 
 	
 #pragma region Settings
+		UPROPERTY(VisibleAnywhere, Category = "Moba|Settings")
+		UMotionWarpingComponent* MotionWarpingComp;
 	
 		UPROPERTY(EditDefaultsOnly, Category = "Moba|Settings")
 		float WalkSpeed = 450.0f;
